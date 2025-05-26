@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Johanna Palms Knappapp</title>
+    <title>Johannas Knappar</title>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
     <style>
         * {
@@ -163,17 +163,17 @@
             visibility: visible;
         }
         
-        /* Button colors */
-        .color-1 { background-color: #FF9AA2; color: #fff; }
-        .color-2 { background-color: #FFB7B2; color: #333; }
-        .color-3 { background-color: #FFDAC1; color: #333; }
-        .color-4 { background-color: #E2F0CB; color: #333; }
-        .color-5 { background-color: #B5EAD7; color: #333; }
-        .color-6 { background-color: #C7CEEA; color: #333; }
-        .color-7 { background-color: #9A8FEF; color: #fff; }
-        .color-8 { background-color: #6EB5FF; color: #fff; }
-        .color-9 { background-color: #85E3FF; color: #333; }
-        .color-10 { background-color: #FDFFAB; color: #333; }
+        /* Button colors - more vibrant */
+        .color-1 { background-color: #FF5A7A; color: #fff; }
+        .color-2 { background-color: #FF8C85; color: #333; }
+        .color-3 { background-color: #FFBE80; color: #333; }
+        .color-4 { background-color: #C0FF60; color: #333; }
+        .color-5 { background-color: #50E0B0; color: #333; }
+        .color-6 { background-color: #90A0FF; color: #333; }
+        .color-7 { background-color: #7A60FF; color: #fff; }
+        .color-8 { background-color: #2090FF; color: #fff; }
+        .color-9 { background-color: #00D5FF; color: #333; }
+        .color-10 { background-color: #FFFF40; color: #333; }
         
         /* Fireworks animation */
         .pyro {
@@ -333,7 +333,7 @@
 </head>
 <body>
     <div class="page-title">
-        <h1>Johanna Palms<br><span>Knappapp</span></h1>
+        <h1>Johannas<br><span>Knappar</span></h1>
         <div class="splash">
             Tryck på<br>en knapp!
             <div class="splash-arrow"></div>
@@ -395,8 +395,8 @@
                 "Du fixar det här! Jag tror på dig!",
                 "Ditt hårda arbete kommer att löna sig!",
                 "Glöm inte hur långt du har kommit!",
+                "Du är fantastisk, kanske världens bästa människa!",
                 "Din vänlighet betyder mer än du vet.",
-                "Små steg tar dig fortfarande framåt!",
                 "Du är starkare än du tror!",
                 "Ta en stund och uppskatta dig själv idag.",
                 "Din resa är unikt din, och den är vacker.",
@@ -411,8 +411,8 @@
             
             // Button labels - now just numbers
             const buttonLabels = [
-                "1", "2", "3", "4", "5", 
-                "6", "7", "8", "9", "10"
+                "Tryck här!", "Eller här!", "Denna är bra också", "Här är en annan", "Knappeliknapp", 
+                "Åh, hej!", "Ett litet klick här bara så blir det bra", "Det löser sig, bara du klickar här ", "Eller vänta, denna är bättre", "Hjälpte det inte?"
             ];
             
             // Color classes
@@ -428,12 +428,19 @@
                 button.textContent = buttonLabels[i];
                 button.dataset.messageIndex = i;
                 
-                button.addEventListener('click', function() {
-                    const messageIndex = parseInt(this.dataset.messageIndex);
-                    showMessage(messages[messageIndex]);
-                    createNewFireworks();
-                    fetchRandomGif();
-                });
+                if (i === 9) { // Last button (index 9) - make it a mailto link
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.location.href = 'mailto:johannasstodgrupp@goteborgfilmfestival.se';
+                    });
+                } else {
+                    button.addEventListener('click', function() {
+                        const messageIndex = parseInt(this.dataset.messageIndex);
+                        showMessage(messages[messageIndex]);
+                        createNewFireworks();
+                        fetchRandomGif();
+                    });
+                }
                 
                 grid.appendChild(button);
             }
