@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Johanna Palms Knappapp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        body {
+            padding-bottom: 15px; /* Moderate padding at the bottom of the body */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-title {
+            text-align: center;
+            padding: 15px 10px;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        .page-title h1 {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 28px;
+            margin: 0;
+            font-weight: bold;
+            animation: titleBlink 2s infinite;
+            line-height: 1.2;
+            padding: 0 5px;
+        }
+        
+        .page-title h1 span {
+            display: block;
+            font-size: 42px;
+        }
+        
+        @keyframes titleBlink {
+            0% { color: #333; }
+            50% { color: #ff0000; }
+            100% { color: #333; }
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            height: calc(100vh - 80px - 30px); /* Adjusted to a more moderate value */
+            min-height: calc(100% - 110px); /* Adjusted minimum height */
+            padding: 10px 10px 15px 10px; /* Moderate padding at the bottom */
+            margin-bottom: 20px; /* Moderate bottom margin */
+            background-color: #f8f9fa;
+            position: relative; /* Added for better positioning */
+        }
+        
+        .grid-button {
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .grid-button:active {
+            transform: scale(0.95);
+        }
+        
+        .message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        
+        .message-text {
+            color: white;
+            font-size: 28px;
+            text-align: center;
+            padding: 20px;
+            max-width: 90%;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+        
+        .gif-container {
+            margin: 20px 0;
+            width: 90%;
+            max-width: 300px;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .gif-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .gif-loading {
+            color: white;
+            font-size: 16px;
+        }
+        
+        .close-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-button:active {
+            transform: scale(0.95);
+        }
+        
+        .show-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Button colors */
+        .color-1 { background-color: #FF9AA2; color: #fff; }
+        .color-2 { background-color: #FFB7B2; color: #333; }
+        .color-3 { background-color: #FFDAC1; color: #333; }
+        .color-4 { background-color: #E2F0CB; color: #333; }
+        .color-5 { background-color: #B5EAD7; color: #333; }
+        .color-6 { background-color: #C7CEEA; color: #333; }
+        .color-7 { background-color: #9A8FEF; color: #fff; }
+        .color-8 { background-color: #6EB5FF; color: #fff; }
+        .color-9 { background-color: #85E3FF; color: #333; }
+        .color-10 { background-color: #FDFFAB; color: #333; }
+        
+        /* Fireworks animation */
+        .pyro {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .pyro > .before, .pyro > .after {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 #fff;
+            animation: 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards;
+            animation-delay: calc(var(--delay) * 1s);
+        }
+        
+        .pyro > .after {
+            animation-delay: calc((var(--delay) + 0.25) * 1s), calc((var(--delay) + 0.25) * 1s), calc((var(--delay) + 0.25) * 1s);
+            animation-duration: 1.25s, 1.25s, 6.25s;
+        }
+        
+        @keyframes bang {
+            to {
+                box-shadow: -70px -115.67px #00ff84, 55px -92.67px #ff8800, 10px -6.67px #ff006a, -70px -46.67px #0048ff, -58px -123.67px #ff00bf, -32px -50.67px #ff6600, -89px -81.67px #ff001e, -23px -18.67px #8cff00, 19px -32.67px #ff4400, 15px -82.67px #00ffaa, -82px -97.67px #a6ff00, -30px -102.67px #9500ff, -91px -30.67px #00ff88, 33px -11.67px #0066ff, 45px -93.67px #0400ff, 6px -126.67px #ff001e, -17px -70.67px #00ffd0, 43px -68.67px #001eff;
+                transform: translate(calc(var(--x) * 1vw), calc(var(--y) * 1vh)) scale(0);
+            }
+        }
+        
+        @keyframes gravity {
+            to {
+                transform: translateY(calc(var(--gravity) * 100vh));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes position {
+            0% {
+                top: 50%;
+                left: 50%;
+            }
+            25% {
+                top: calc(50% + var(--top-offset) * 10%);
+                left: calc(50% + var(--left-offset) * 10%);
+            }
+            50% {
+                top: calc(50% - var(--top-offset) * 10%);
+                left: calc(50% - var(--left-offset) * 10%);
+            }
+            75% {
+                top: calc(50% + var(--top-offset) * 5%);
+                left: calc(50% - var(--left-offset) * 5%);
+            }
+            100% {
+                top: 50%;
+                left: 50%;
+            }
+        }
+        
+        /* Splash element */
+        .splash {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 130px;
+            height: 130px;
+            background-color: #FF5252;
+            color: white;
+            border-radius: 50%;
+            transform: rotate(15deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+            z-index: 10;
+            line-height: 1.3;
+            border: 3px solid white;
+        }
+        
+        .splash:before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            border: 2px dashed white;
+            animation: spin 15s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .splash-arrow {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid white;
+            margin-top: 5px;
+            animation: bounce 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: rotate(15deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.05); }
+            100% { transform: rotate(15deg) scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(8px); }
+            60% { transform: translateY(4px); }
+        }
+        
+        /* Responsive styling */
+        @media (max-width: 480px) {
+            .splash {
+                width: 100px;
+                height: 100px;
+                top: 5px;
+                right: 10px;
+                font-size: 16px;
+            }
+            
+            .splash-arrow {
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 12px solid white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Johanna Palms<br><span>Knappapp</span></h1>
+        <div class="splash">
+            Tryck på<br>en knapp!
+            <div class="splash-arrow"></div>
+        </div>
+    </div>
+    <div class="grid-container" id="grid">
+        <!-- Buttons will be generated with JavaScript -->
+    </div>
+    
+    <div class="message-overlay" id="overlay">
+        <div class="pyro">
+            <div class="before" style="--delay: 0; --x: 20; --y: -30; --gravity: 1; --top-offset: 2; --left-offset: 3;"></div>
+            <div class="before" style="--delay: 0.2; --x: -30; --y: -20; --gravity: 1.2; --top-offset: 3; --left-offset: 1;"></div>
+            <div class="before" style="--delay: 0.4; --x: 10; --y: -10; --gravity: 0.8; --top-offset: 1; --left-offset: 2;"></div>
+            <div class="before" style="--delay: 0.6; --x: -20; --y: -25; --gravity: 1.3; --top-offset: 4; --left-offset: 2;"></div>
+            <div class="before" style="--delay: 0.8; --x: 30; --y: -15; --gravity: 0.9; --top-offset: 2; --left-offset: 4;"></div>
+            <div class="after" style="--delay: 0.1; --x: 15; --y: -25; --gravity: 1.1; --top-offset: 3; --left-offset: 2;"></div>
+            <div class="after" style="--delay: 0.3; --x: -25; --y: -15; --gravity: 1.2; --top-offset: 2; --left-offset: 3;"></div>
+            <div class="after" style="--delay: 0.5; --x: 5; --y: -35; --gravity: 0.7; --top-offset: 1; --left-offset: 4;"></div>
+            <div class="after" style="--delay: 0.7; --x: -15; --y: -20; --gravity: 1.4; --top-offset: 4; --left-offset: 1;"></div>
+            <div class="after" style="--delay: 0.9; --x: 25; --y: -10; --gravity: 0.8; --top-offset: 2; --left-offset: 3;"></div>
+        </div>
+        <div class="message-text" id="message"></div>
+        <div class="gif-container" id="gifContainer">
+            <div class="gif-loading" id="gifLoading">Laddar en rolig GIF...</div>
+        </div>
+        <button class="close-button" id="closeButton">Stäng</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('grid');
+            const overlay = document.getElementById('overlay');
+            const messageText = document.getElementById('message');
+            const closeButton = document.getElementById('closeButton');
+            const gifContainer = document.getElementById('gifContainer');
+            const gifLoading = document.getElementById('gifLoading');
+            const splash = document.querySelector('.splash');
+            
+            // Adjust splash size based on initial screen size
+            if (window.innerWidth < 360 && splash) {
+                splash.style.right = '10px';
+                splash.style.top = '5px';
+                splash.style.width = '100px';
+                splash.style.height = '100px';
+                splash.style.fontSize = '16px';
+            }
+            
+            // Giphy API key (using public beta key - for production, you should get your own)
+            const GIPHY_API_KEY = 'Gc7131jiJuvI7IdN0HZ1D7nh0ow5BU6g';
+            
+            // List of encouraging messages in Swedish
+            const messages = [
+                "Du är fantastisk precis som du är!",
+                "Din potential är obegränsad. Fortsätt att lysa!",
+                "Idag är din dag att glänsa!",
+                "Du gör världen till en bättre plats.",
+                "Ditt leende lyser upp allas dag!",
+                "Du fixar det här! Jag tror på dig!",
+                "Ditt hårda arbete kommer att löna sig!",
+                "Glöm inte hur långt du har kommit!",
+                "Din vänlighet betyder mer än du vet.",
+                "Du är starkare än du tror!",
+                "Ta en stund och uppskatta dig själv idag.",
+                "Din resa är unikt din, och den är vacker.",
+                "Små steg tar dig fortfarande framåt!",
+                "Varje dag är en ny möjlighet att växa.",
+                "Ditt mod inspirerar andra!",
+                "Du sprider glädje till alla omkring dig.",
+                "Var stolt över dig själv, det är jag!",
+                "Ditt perspektiv är värdefullt och behövs.",
+                "Utmaningar hjälper dig att bli starkare.",
+                "Din närvaro gör skillnad!"
+            ];
+            
+            // Button labels - now just numbers
+            const buttonLabels = [
+                "1", "2", "3", "4", "5", 
+                "6", "7", "8", "9", "10"
+            ];
+            
+            // Color classes
+            const colorClasses = [
+                'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
+                'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
+            ];
+            
+            // Create buttons
+            for (let i = 0; i < 10; i++) {
+                const button = document.createElement('button');
+                button.className = `grid-button ${colorClasses[i % colorClasses.length]}`;
+                button.textContent = buttonLabels[i];
+                button.dataset.messageIndex = i;
+                
+                button.addEventListener('click', function() {
+                    const messageIndex = parseInt(this.dataset.messageIndex);
+                    showMessage(messages[messageIndex]);
+                    createNewFireworks();
+                    fetchRandomGif();
+                });
+                
+                grid.appendChild(button);
+            }
+            
+            // Show message and overlay
+            function showMessage(message) {
+                messageText.textContent = message;
+                overlay.classList.add('show-overlay');
+            }
+            
+            // Fetch and display a random positive/encouraging GIF
+            function fetchRandomGif() {
+                // Show loading indicator
+                gifLoading.style.display = 'block';
+                if (gifContainer.querySelector('img')) {
+                    gifContainer.querySelector('img').remove();
+                }
+                
+                // Random positive search terms to get uplifting GIFs
+                const positiveTerms = [
+                    'happy', 'celebrate', 'success', 'joy', 'cheer', 
+                    'party', 'dance', 'hooray', 'awesome', 'amazing',
+                    'smile', 'love', 'encourage', 'cute animal', 'funny',
+                    'high five', 'thumbs up', 'sparkle', 'fireworks', 'confetti'
+                ];
+                
+                const randomTerm = positiveTerms[Math.floor(Math.random() * positiveTerms.length)];
+                
+                // Fetch a random GIF from Giphy
+                fetch(`https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_API_KEY}&tag=${randomTerm}&rating=g`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Hide loading indicator
+                        gifLoading.style.display = 'none';
+                        
+                        // Create and display the GIF
+                        const img = document.createElement('img');
+                        img.src = data.data.images.fixed_height.url;
+                        img.alt = 'Encouraging GIF';
+                        img.onload = () => {
+                            gifContainer.appendChild(img);
+                        };
+                    })
+                    .catch(error => {
+                        console.error('Error fetching GIF:', error);
+                        gifLoading.textContent = 'Kunde inte ladda GIF, men du är fortfarande fantastisk!';
+                    });
+            }
+            
+            // Hide overlay when close button is clicked
+            closeButton.addEventListener('click', function() {
+                overlay.classList.remove('show-overlay');
+                // Remove any loaded GIF when closing
+                if (gifContainer.querySelector('img')) {
+                    gifContainer.querySelector('img').remove();
+                }
+            });
+            
+            // Create new fireworks elements with random properties
+            function createNewFireworks() {
+                const pyro = document.querySelector('.pyro');
+                pyro.innerHTML = ''; // Clear existing fireworks
+                
+                // Create new fireworks particles
+                for (let i = 0; i < 15; i++) {
+                    const delay = Math.random() * 0.5;
+                    const x = (Math.random() - 0.5) * 60;
+                    const y = (Math.random() - 0.5) * 60;
+                    const gravity = 0.7 + Math.random() * 0.8;
+                    const topOffset = Math.random() * 5;
+                    const leftOffset = Math.random() * 5;
+                    
+                    const before = document.createElement('div');
+                    before.className = 'before';
+                    before.style.setProperty('--delay', delay);
+                    before.style.setProperty('--x', x);
+                    before.style.setProperty('--y', y);
+                    before.style.setProperty('--gravity', gravity);
+                    before.style.setProperty('--top-offset', topOffset);
+                    before.style.setProperty('--left-offset', leftOffset);
+                    
+                    const after = document.createElement('div');
+                    after.className = 'after';
+                    after.style.setProperty('--delay', delay + 0.1);
+                    after.style.setProperty('--x', -x);
+                    after.style.setProperty('--y', y);
+                    after.style.setProperty('--gravity', gravity);
+                    after.style.setProperty('--top-offset', topOffset);
+                    after.style.setProperty('--left-offset', leftOffset);
+                    
+                    pyro.appendChild(before);
+                    pyro.appendChild(after);
+                }
+            }
+            
+            // Handle window resize to adjust grid
+            window.addEventListener('resize', function() {
+                // Adjust grid layout based on screen width
+                if (window.innerWidth < 360) {
+                    grid.style.gridTemplateColumns = 'repeat(1, 1fr)';
+                    grid.style.gridTemplateRows = 'repeat(10, 1fr)';
+                    
+                    // Adjust splash position for smaller screens
+                    const splash = document.querySelector('.splash');
+                    if (splash) {
+                        splash.style.right = '10px';
+                        splash.style.top = '5px';
+                        splash.style.width = '100px';
+                        splash.style.height = '100px';
+                        splash.style.fontSize = '16px';
+                    }
+                } else {
+                    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                    grid.style.gridTemplateRows = 'repeat(5, 1fr)';
+                    
+                    // Reset splash styling for larger screens
+                    const splash = document.querySelector('.splash');
+                    if (splash) {
+                        splash.style.right = '20px';
+                        splash.style.top = '10px';
+                        splash.style.width = '130px';
+                        splash.style.height = '130px';
+                        splash.style.fontSize = '20px';
+                    }
+                }
+                
+                // Ensure grid height adjusts for title and bottom margin
+                grid.style.height = `calc(100vh - 80px - 30px)`;
+            });
+            
+            // Add touch effects for mobile
+            document.querySelectorAll('.grid-button, .close-button').forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
